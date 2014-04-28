@@ -140,8 +140,7 @@ describe.only('A RequestRedisCache retrieving from a downed redis instance', fun
     expect(this.errors.length).to.be.at.least(1);
     expect(this.errors[0]).to.have.property('cacheKey', 'redisless-data');
     expect(this.errors[0].action).to.contain('Could not get cached data from redis');
-    // expect(this.errors[1].action).to.contain('Could not save fresh data to redis');
-    console.log(this.errors);
+    expect(this.errors[1].action).to.contain('Could not save fresh data to redis');
   });
 
   it('grabs fresh data', function () {
