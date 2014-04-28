@@ -22,7 +22,9 @@ var cacheUtils = {
       this.errors = [];
       var that = this;
       this.cache.on('error', function (error) {
-        that.errors.push(error);
+        console.log(error);
+        throw error;
+        // that.errors.push(error);
       });
     });
     after(function cleanupErrors () {
