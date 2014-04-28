@@ -34,21 +34,6 @@ describe('A RequestRedisCache', function () {
       });
     });
   });
-
-  // TOOD: Is there a time when we don't need to delete by pattern but key instead?
-  describe.skip('with cached data', function () {
-    describe('when deleting via a single pattern', function () {
-      it('is no longer in the cache', function () {
-
-      });
-    });
-
-    describe('when deleting multiple patterns', function () {
-      it('is no longer in the cache', function () {
-
-      });
-    });
-  });
 });
 
 // Edge cases for verifying we handle errors nicely
