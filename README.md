@@ -47,10 +47,12 @@ cache.get({
 ```
 
 ## Documentation
-_(Coming soon)_
+`request-redis-cache` exports the constructor `RequestRedisCache` as its `module.exports`.
 
-## Examples
-_(Coming soon)_
+### `RequestRedisCache(options)`
+Constructor for a new cache. `RequestRedisCache` extends from an [`EventEmitter`][] and invokes its constructor during the instantiation process.
+
+[`EventEmitter`]: http://nodejs.org/api/events.html
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint via [grunt](https://github.com/gruntjs/grunt) and test via `npm test`.
