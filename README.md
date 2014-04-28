@@ -67,6 +67,28 @@ Constructor for a new cache. `RequestRedisCache` extends from an [`EventEmitter`
 
 [`redis`]: https://github.com/mranney/node_redis
 
+#### `cache#get(params, cb)`
+Method to retrieve data from Redis or a server depending of it has been cached/not.
+
+If there are any errors while interacting with Redis, then they will be emitted via `error` channel. If these are handled (via `.on/.once`), then `get` will still function by talking to the server.
+
+- params `Object`, container for parameters
+    - cacheKey `String`, key to retrieve/save data under
+    - cacheTtl `Number`, seconds to cache information for
+    - requestOptions `Mixed`, parameters to be used in `uncachedGet`
+    - uncachedGet `Function`, `(options, cb)` function to resolve external data
+        - options `Mixed`, data passed in via `requestOptions`
+        - cb `Function`, error-first function, `(err, data)`, to callback with data
+            - err `Error|null`, error if any occurred during retrieval
+            - data `Mixed`, data retrieved from external call
+        - We choose this split structure of `requestOptions`/`uncachedGet` because it is expected that `uncachedGet` remains generic while `requestOptions` can shift from case to case
+- cb `Function`, error-first callback, `(err, data)`, to receive fetched data
+    - err `Error|null`, error if any occurred during retrieval
+    - data `Mixed`, data retrieved from cache/external call
+
+##### Emitted errors
+TODO: Document `action`, `cacheKey`, `infoStr`
+
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint via [grunt](https://github.com/gruntjs/grunt) and test via `npm test`.
 
