@@ -54,6 +54,17 @@ Constructor for a new cache. `RequestRedisCache` extends from an [`EventEmitter`
 
 [`EventEmitter`]: http://nodejs.org/api/events.html
 
+- params `Object`, container for parameters
+    - redis `Redis`, instance of [`redis`][] to cache via
+    - stringify `Function`, optional serializer for when saving data to Redis
+        - By default, this is `JSON.stringify`
+        - `stringify` will receive data from `uncachedGet` and is expected to return a `String`
+    - parse `Function`, optional deserializer for restoring data from Redis
+        - By default, this is `JSON.parse`
+        - `parse` will receive a `String` and is expected to restore via same format that `uncachedGet` would callback with
+
+[`redis`]: https://github.com/mranney/node_redis
+
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint via [grunt](https://github.com/gruntjs/grunt) and test via `npm test`.
 
