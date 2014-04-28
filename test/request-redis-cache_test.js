@@ -17,13 +17,18 @@ describe('A RequestRedisCache', function () {
   });
 
   describe('fetching fresh data', function () {
+    before(function () {
+      this.callCount = 0;
+    });
     before(function (done) {
       var that = this;
+      this.callCount = 0;
       this.cache.get({
         cacheKey: 'fresh-data',
         cacheTtl: 100,
         uncachedGet: function (options, cb) {
           // DEV: This symbolizes any kind of response (e.g. api client response, HTTP response)
+          that.callCount += 1;
           cb(null, {hello: 'world'});
         },
         requestOptions: {}
@@ -37,13 +42,29 @@ describe('A RequestRedisCache', function () {
       expect(this.data).to.deep.equal({hello: 'world'});
     });
 
-    describe.skip('when fetched again', function () {
-      it('does not double request', function () {
+    describe('when fetched again', function () {
+      before(function (done) {
+        var that = this;
+        this.cache.get({
+          cacheKey: 'fresh-data',
+          cacheTtl: 100,
+          uncachedGet: function (options, cb) {
+            that.callCount += 1;
+            cb(null, {hello: 'world'});
+          },
+          requestOptions: {}
+        }, function (err, data) {
+          that.data = data;
+          done(err);
+        });
+      });
 
+      it('does not double request', function () {
+        expect(this.callCount).to.equal(1);
       });
 
       it('retrieves our data', function () {
-
+        expect(this.data).to.deep.equal({hello: 'world'});
       });
     });
   });
