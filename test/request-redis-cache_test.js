@@ -116,6 +116,9 @@ describe('A RequestRedisCache', function () {
 // Edge cases for verifying we handle errors nicely
 describe.only('A RequestRedisCache retrieving from a downed redis instance', function () {
   redisUtils.createClient();
+  before(function swallowClientErrors () {
+    this.redis.on('error', function noop () {});
+  });
   cacheUtils.create();
   cacheUtils.collectErrors();
   before(function (done) {
