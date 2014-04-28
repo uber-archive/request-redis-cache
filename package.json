@@ -1,0 +1,45 @@
+{
+  "name": "request-redis-cache",
+  "description": "Make requests and cache them in Redis",
+  "version": "0.1.0",
+  "homepage": "https://github.com/uber/request-redis-cache",
+  "author": {
+    "name": "Todd Wolfson",
+    "email": "todd@twolfson.com",
+    "url": "http://twolfson.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/uber/request-redis-cache.git"
+  },
+  "bugs": {
+    "url": "https://github.com/uber/request-redis-cache/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/uber/request-redis-cache/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "lib/request-redis-cache",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt jshint && mocha"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "~1.11.0",
+    "grunt": "~0.4.1",
+    "grunt-cli": "~0.1.13",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-watch": "~0.4.0"
+  },
+  "keywords": [
+    "request",
+    "cache",
+    "redis",
+    "expire"
+  ]
+}
