@@ -87,7 +87,13 @@ If there are any errors while interacting with Redis, then they will be emitted 
     - data `Mixed`, data retrieved from cache/external call
 
 ##### Emitted errors
-TODO: Document `action`, `cacheKey`, `infoStr`
+Errors that are emitted will originally come from [`redis`][] or `params.parse`. To be nice, we add on a few extra data points
+
+- action `String`, human explanation of what went wrong
+- cacheKey `String`, key we were using with Redis
+- cacheTtl `Number`, TTL we were using with Redis
+- infoStr `String`, stringified form of data from `uncachedGet`/Redis
+    - This can only be found when we are interacting with to be cached or already cached data
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint via [grunt](https://github.com/gruntjs/grunt) and test via `npm test`.
