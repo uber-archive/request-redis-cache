@@ -39,7 +39,9 @@
     "grunt-contrib-watch": "~0.4.0",
     "redis": "~0.10.1",
     "chai": "~1.9.1",
-    "express": "~4.1.1"
+    "express": "~4.1.1",
+    "underscore": "~1.6.0",
+    "request": "~2.34.0"
   },
   "keywords": [
     "request",
