@@ -114,6 +114,7 @@ describe('A RequestRedisCache', function () {
 });
 
 // Edge cases for verifying we handle errors nicely
+// TODO: We cannot think of a test case for verifying error handling with `del`
 describe('A RequestRedisCache retrieving from a downed redis instance', function () {
   redisUtils.createClient();
   before(function swallowClientErrors () {
@@ -148,7 +149,7 @@ describe('A RequestRedisCache retrieving from a downed redis instance', function
   });
 });
 
-describe.only('A RequestRedisCache with malformed data', function () {
+describe('A RequestRedisCache with malformed data', function () {
   redisUtils.run();
   cacheUtils.create();
   cacheUtils.collectErrors();
@@ -189,21 +190,5 @@ describe.only('A RequestRedisCache with malformed data', function () {
 
   it('grabs fresh data', function () {
     expect(this.data).to.deep.equal({hello: 'world'});
-  });
-});
-
-// DEV: This verifies `redis.get` and `redis.setex` degrades nicely
-// TODO: We cannot think of a test case for verifying error handling with `del`
-describe.skip('A RequestRedisCache caching fresh data with a bad key', function () {
-  it('emits an error about the get from cache', function () {
-
-  });
-
-  it('emits an error about the set to cache', function () {
-
-  });
-
-  it('returns fresh data', function () {
-
   });
 });
