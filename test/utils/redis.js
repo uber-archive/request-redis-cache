@@ -11,7 +11,11 @@ exports.createClient = function () {
 
   // Teardown client and server
   after(function exitClient (done) {
-    this.redis.quit(done);
+    if (this.redis.connected) {
+      this.redis.quit(done);
+    } else {
+      process.nextTick(done);
+    }
     delete this.redis;
   });
 };
