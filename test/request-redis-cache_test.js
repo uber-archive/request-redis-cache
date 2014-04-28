@@ -155,7 +155,7 @@ describe.only('A RequestRedisCache with malformed data', function () {
   before(function saveBadData (done) {
     this.redis.set('malformed-data', '{"wat}', done);
   });
-  before(function (done) {
+  before(function makeRequest (done) {
     var that = this;
     this.cache.get({
       cacheKey: 'malformed-data',
@@ -169,17 +169,26 @@ describe.only('A RequestRedisCache with malformed data', function () {
       done(err);
     });
   });
+  before(function getBadDataTtl (done) {
+    var that = this;
+    this.redis.ttl('malformed-data', function (err, ttl) {
+      that.ttl = ttl;
+      done(err);
+    });
+  });
 
   it('emits a descriptive error', function () {
-
+    expect(this.errors.length).to.be.at.least(1);
+    expect(this.errors[0]).to.have.property('cacheKey', 'malformed-data');
+    expect(this.errors[0].action).to.contain('Could not parse cached data from redis');
   });
 
   it('invalidates the cached data', function () {
-
+    expect(this.ttl).to.equal(1000);
   });
 
   it('grabs fresh data', function () {
-
+    expect(this.data).to.deep.equal({hello: 'world'});
   });
 });
 
