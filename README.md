@@ -1,6 +1,11 @@
 # request-redis-cache [![Build status](https://travis-ci.org/uber/request-redis-cache.png?branch=master)](https://travis-ci.org/uber/request-redis-cache)
 
-Make requests and cache them in Redis
+Make requests and cache them in [Redis][]
+
+This was built along side [backbone-api-client][] to make caching responses from API clients easier. However, it is generic enough to use with any request mechanism.
+
+[Redis]: http://redis.io/
+[backbone-api-client]: https://github.com/uber/backbone-api-client
 
 ## Getting Started
 Install the module with: `npm install request-redis-cache`
