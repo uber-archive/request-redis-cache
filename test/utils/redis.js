@@ -12,6 +12,15 @@ exports.run = function () {
     server.stdout.once('data', function handleServerListen (buff) {
       setTimeout(done, 100);
     });
+
+    // Collect output in case the server terminates prematurely
+    var output = '';
+    server.stdout.on('data', function collectOutput (buff) {
+      output += buff;
+    });
+    server.on('exit', function (code) {
+      console.error('Unpredicted redis exit. Code: ' + code + '. Output: ' + output);
+    });
   });
 
   // Connect a client
