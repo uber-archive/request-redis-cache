@@ -3,7 +3,21 @@ var spawn = require('child_process').spawn;
 var redis = require('redis');
 
 // Utility method for create a redis client
-// TODO: This should be broken up if posible
+exports.createClient = function () {
+  // Connect a client
+  before(function createClient () {
+    this.redis = redis.createClient(9001);
+  });
+
+  // Teardown client and server
+  after(function exitClient (done) {
+    this.redis.quit(done);
+    delete this.redis;
+  });
+};
+
+// Utility to stat a server and a redis client
+// DEV: We must teardown the client before the server stops to prevent errors
 exports.run = function () {
   // Start a server
   var server;
@@ -24,16 +38,10 @@ exports.run = function () {
     });
   });
 
-  // Connect a client
-  before(function createClient () {
-    this.redis = redis.createClient(9001);
-  });
+  // Startup/teardown a client
+  exports.createClient();
 
-  // Teardown client and server
-  after(function exitClient (done) {
-    this.redis.quit(done);
-    delete this.redis;
-  });
+  // Teardown the server
   after(function stopServer (done) {
     // Kill the server and callback when dead
     server.removeAllListeners('exit');
