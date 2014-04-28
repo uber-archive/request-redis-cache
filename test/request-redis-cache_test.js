@@ -5,10 +5,30 @@ var RequestRedisCache = require('../');
 // Start tests
 describe('A RequestRedisCache', function () {
   redisUtils.run();
+  before(function createCache () {
+    this.cache = new RequestRedisCache({
+      redis: this.redis,
+      logger: {}
+    });
+  });
+  after(function cleanupCache () {
+    delete this.cache;
+  });
 
-  describe.skip('fetching fresh data', function () {
-    it('does not have any errors', function () {
-
+  describe('fetching fresh data', function () {
+    before(function (done) {
+      var that = this;
+      this.cache.get({
+        cacheKey: 'fresh-data',
+        cacheTtl: 100,
+        uncachedGet: function (options, cb) {
+          cb(null, options);
+        },
+        options: {}
+      }, function (err, data) {
+        that.data = data;
+        done(err);
+      });
     });
 
     it('retrieves our data', function () {
