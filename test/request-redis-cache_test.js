@@ -1,21 +1,7 @@
 // Load in our dependencies
-var _ = require('underscore');
-var request = require('request');
 var expect = require('chai').expect;
 var redisUtils = require('./utils/redis');
-var serverUtils = require('./utils/server');
 var RequestRedisCache = require('../');
-
-// Helper for running against the cache
-var cacheUtils = {
-  save: function (options) {
-    this.cache.get({
-      uncachedGet: function (options, cb) {
-        // DEV: This symbolizes any kind of response (e.g. api client response, HTTP response)
-        request(options
-      }
-    }, function handleResponse ();
-};
 
 // Start tests
 describe('A RequestRedisCache', function () {
@@ -31,8 +17,25 @@ describe('A RequestRedisCache', function () {
   });
 
   describe('fetching fresh data', function () {
-    serverUtils.run(function (req, res) {
-      res.send({hello: 'world'});
+    before(function () {
+      this.callCount = 0;
+    });
+    before(function (done) {
+      var that = this;
+      this.callCount = 0;
+      this.cache.get({
+        cacheKey: 'fresh-data',
+        cacheTtl: 100,
+        uncachedGet: function (options, cb) {
+          // DEV: This symbolizes any kind of response (e.g. api client response, HTTP response)
+          that.callCount += 1;
+          cb(null, {hello: 'world'});
+        },
+        requestOptions: {}
+      }, function (err, data) {
+        that.data = data;
+        done(err);
+      });
     });
 
     it('retrieves our data', function () {
