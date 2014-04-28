@@ -114,7 +114,7 @@ describe('A RequestRedisCache', function () {
 });
 
 // Edge cases for verifying we handle errors nicely
-describe.only('A RequestRedisCache retrieving from a downed redis instance', function () {
+describe('A RequestRedisCache retrieving from a downed redis instance', function () {
   redisUtils.createClient();
   before(function swallowClientErrors () {
     this.redis.on('error', function noop () {});
@@ -136,7 +136,7 @@ describe.only('A RequestRedisCache retrieving from a downed redis instance', fun
     });
   });
 
-  it('emits a descriptive error', function () {
+  it('emits descriptive errors', function () {
     expect(this.errors.length).to.be.at.least(1);
     expect(this.errors[0]).to.have.property('cacheKey', 'redisless-data');
     expect(this.errors[0].action).to.contain('Could not get cached data from redis');
@@ -148,7 +148,28 @@ describe.only('A RequestRedisCache retrieving from a downed redis instance', fun
   });
 });
 
-describe.skip('A RequestRedisCache with malformed data', function () {
+describe.only('A RequestRedisCache with malformed data', function () {
+  redisUtils.run();
+  cacheUtils.create();
+  cacheUtils.collectErrors();
+  before(function saveBadData (done) {
+    this.redis.set('malformed-data', '{"wat}', done);
+  });
+  before(function (done) {
+    var that = this;
+    this.cache.get({
+      cacheKey: 'malformed-data',
+      cacheTtl: 1000,
+      uncachedGet: function (options, cb) {
+        cb(null, {hello: 'world'});
+      },
+      requestOptions: {}
+    }, function (err, data) {
+      that.data = data;
+      done(err);
+    });
+  });
+
   it('emits a descriptive error', function () {
 
   });
