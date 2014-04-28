@@ -68,7 +68,6 @@ describe('A RequestRedisCache', function () {
           cacheKey: 'expired-data',
           cacheTtl: 1, // seconds
           uncachedGet: function (options, cb) {
-            // DEV: This symbolizes any kind of response (e.g. api client response, HTTP response)
             that.callCount += 1;
             cb(null, {count: that.callCount});
           },
@@ -96,12 +95,20 @@ describe('A RequestRedisCache', function () {
 
 // Edge cases for verifying we handle errors nicely
 describe.skip('A RequestRedisCache retrieving from a downed redis instance', function () {
-  it('callsback with a descriptive error', function () {
+  it('emits a descriptive error', function () {
+
+  });
+
+  it('grabs fresh data', function () {
 
   });
 });
 
 describe.skip('A RequestRedisCache with malformed data', function () {
+  it('emits a descriptive error', function () {
+
+  });
+
   it('invalidates the cached data', function () {
 
   });
