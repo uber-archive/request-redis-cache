@@ -46,12 +46,12 @@ describe('A RequestRedisCache', function () {
         this.cache.get({
           cacheKey: 'fresh-data',
           cacheTtl: 1000,
+          requestOptions: {},
           uncachedGet: function (options, cb) {
             // DEV: This symbolizes any kind of response (e.g. api client response, HTTP response)
             that.callCount += 1;
             cb(null, {hello: 'world'});
-          },
-          requestOptions: {}
+          }
         }, function (err, data) {
           that.data = data;
           done(err);
@@ -87,11 +87,11 @@ describe('A RequestRedisCache', function () {
         this.cache.get({
           cacheKey: 'expired-data',
           cacheTtl: 1, // seconds
+          requestOptions: {},
           uncachedGet: function (options, cb) {
             that.callCount += 1;
             cb(null, {count: that.callCount});
-          },
-          requestOptions: {}
+          }
         }, function (err, data) {
           that.data = data;
           done(err);
@@ -127,10 +127,10 @@ describe('A RequestRedisCache retrieving from a downed redis instance', function
     this.cache.get({
       cacheKey: 'redisless-data',
       cacheTtl: 1000,
+      requestOptions: {},
       uncachedGet: function (options, cb) {
         cb(null, {hello: 'world'});
-      },
-      requestOptions: {}
+      }
     }, function (err, data) {
       that.data = data;
       done(err);
@@ -161,10 +161,10 @@ describe('A RequestRedisCache with malformed data', function () {
     this.cache.get({
       cacheKey: 'malformed-data',
       cacheTtl: 1000,
+      requestOptions: {},
       uncachedGet: function (options, cb) {
         cb(null, {hello: 'world'});
-      },
-      requestOptions: {}
+      }
     }, function (err, data) {
       that.data = data;
       done(err);
