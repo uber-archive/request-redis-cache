@@ -3,18 +3,38 @@ var expect = require('chai').expect;
 var redisUtils = require('./utils/redis');
 var RequestRedisCache = require('../');
 
+// Define helpers for interacting with cache
+var cacheUtils = {
+  // Method to create a new client
+  create: function () {
+    before(function createCache () {
+      this.cache = new RequestRedisCache({
+        redis: this.redis
+      });
+    });
+    after(function cleanupCache () {
+      delete this.cache;
+    });
+  },
+  // Method to collect errors as they occur
+  collectErrors: function () {
+    before(function () {
+      this.errors = [];
+      var that = this;
+      this.cache.on('error', function (error) {
+        that.errors.push(error);
+      });
+    });
+    after(function cleanupErrors () {
+      delete this.errors;
+    });
+  }
+};
+
 // Start tests
 describe('A RequestRedisCache', function () {
   redisUtils.run();
-  before(function createCache () {
-    this.cache = new RequestRedisCache({
-      redis: this.redis,
-      logger: {}
-    });
-  });
-  after(function cleanupCache () {
-    delete this.cache;
-  });
+  cacheUtils.create();
 
   describe('fetching fresh data', function () {
     before(function setupCallCount () {
@@ -94,13 +114,31 @@ describe('A RequestRedisCache', function () {
 });
 
 // Edge cases for verifying we handle errors nicely
-describe.skip('A RequestRedisCache retrieving from a downed redis instance', function () {
-  it('emits a descriptive error', function () {
+describe.only('A RequestRedisCache retrieving from a downed redis instance', function () {
+  redisUtils.createClient();
+  cacheUtils.create();
+  cacheUtils.collectErrors();
+  before(function (done) {
+    var that = this;
+    this.cache.get({
+      cacheKey: 'redisless-data',
+      cacheTtl: 1000,
+      uncachedGet: function (options, cb) {
+        cb(null, {hello: 'world'});
+      },
+      requestOptions: {}
+    }, function (err, data) {
+      that.data = data;
+      done(err);
+    });
+  });
 
+  it('emits a descriptive error', function () {
+    console.log(this.errors);
   });
 
   it('grabs fresh data', function () {
-
+    expect(this.data).to.deep.equal({hello: 'world'});
   });
 });
 
