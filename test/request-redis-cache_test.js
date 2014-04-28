@@ -17,38 +17,17 @@ describe('A RequestRedisCache', function () {
   });
 
   describe('fetching fresh data', function () {
-    before(function () {
+    before(function setupCallCount () {
       this.callCount = 0;
     });
-    before(function (done) {
-      var that = this;
-      this.callCount = 0;
-      this.cache.get({
-        cacheKey: 'fresh-data',
-        cacheTtl: 100,
-        uncachedGet: function (options, cb) {
-          // DEV: This symbolizes any kind of response (e.g. api client response, HTTP response)
-          that.callCount += 1;
-          cb(null, {hello: 'world'});
-        },
-        requestOptions: {}
-      }, function (err, data) {
-        that.data = data;
-        done(err);
-      });
-    });
-
-    it('retrieves our data', function () {
-      expect(this.data).to.deep.equal({hello: 'world'});
-    });
-
-    describe('when fetched again', function () {
+    function getFreshData() {
       before(function (done) {
         var that = this;
         this.cache.get({
           cacheKey: 'fresh-data',
           cacheTtl: 100,
           uncachedGet: function (options, cb) {
+            // DEV: This symbolizes any kind of response (e.g. api client response, HTTP response)
             that.callCount += 1;
             cb(null, {hello: 'world'});
           },
@@ -58,6 +37,15 @@ describe('A RequestRedisCache', function () {
           done(err);
         });
       });
+    }
+    getFreshData();
+
+    it('retrieves our data', function () {
+      expect(this.data).to.deep.equal({hello: 'world'});
+    });
+
+    describe('when fetched again', function () {
+      getFreshData();
 
       it('does not double request', function () {
         expect(this.callCount).to.equal(1);
