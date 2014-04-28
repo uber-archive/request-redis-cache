@@ -1,10 +1,12 @@
 // Load in our dependencies
+var redisUtils = require('./utils/redis');
 var redisServerUtils = require('./utils/redis-server');
 var RequestRedisCache = require('../');
 
 // Start tests
 describe('A RequestRedisCache', function () {
   redisServerUtils.run();
+  redisUtils.createClient();
 
   describe.skip('fetching fresh data', function () {
     it('does not have any errors', function () {
