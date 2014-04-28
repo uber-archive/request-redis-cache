@@ -35,6 +35,7 @@ exports.run = function () {
   });
   after(function stopServer (done) {
     // Kill the server and callback when dead
+    server.removeAllListeners('exit');
     server.on('exit', function (code) {
       done();
     });
