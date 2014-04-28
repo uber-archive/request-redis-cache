@@ -25,7 +25,7 @@ describe('A RequestRedisCache', function () {
         var that = this;
         this.cache.get({
           cacheKey: 'fresh-data',
-          cacheTtl: 100,
+          cacheTtl: 1000,
           uncachedGet: function (options, cb) {
             // DEV: This symbolizes any kind of response (e.g. api client response, HTTP response)
             that.callCount += 1;
@@ -57,14 +57,38 @@ describe('A RequestRedisCache', function () {
     });
   });
 
-  describe.skip('with expired data', function () {
-    describe('when requested', function () {
-      it('retrieves our data', function () {
-
+  describe('with expired data', function () {
+    before(function setupCallCount () {
+      this.callCount = 0;
+    });
+    function getExpiredData() {
+      before(function (done) {
+        var that = this;
+        this.cache.get({
+          cacheKey: 'expired-data',
+          cacheTtl: 1, // seconds
+          uncachedGet: function (options, cb) {
+            // DEV: This symbolizes any kind of response (e.g. api client response, HTTP response)
+            that.callCount += 1;
+            cb(null, {count: that.callCount});
+          },
+          requestOptions: {}
+        }, function (err, data) {
+          that.data = data;
+          done(err);
+        });
       });
+    }
+    getExpiredData();
+    before(function waitForExpiration (done) {
+      setTimeout(done, 1100);
+    });
+
+    describe('when requested', function () {
+      getExpiredData();
 
       it('grabs the fresh data', function () {
-
+        expect(this.data).to.deep.equal({count: 2});
       });
     });
   });
