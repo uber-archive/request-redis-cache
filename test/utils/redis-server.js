@@ -7,7 +7,7 @@ exports.run = function () {
   before(function startServer (done) {
     // Start a server at 9001, callback when it is listening
     server = spawn('redis-server', ['--port', '9001']);
-    server.stdout.once(function handleServerListen () {
+    server.stdout.once('data', function handleServerListen (buff) {
       done();
     });
   });
