@@ -1,4 +1,5 @@
 // Load in our dependencies
+var expect = require('chai').expect;
 var redisUtils = require('./utils/redis');
 var RequestRedisCache = require('../');
 
@@ -22,9 +23,10 @@ describe('A RequestRedisCache', function () {
         cacheKey: 'fresh-data',
         cacheTtl: 100,
         uncachedGet: function (options, cb) {
-          cb(null, options);
+          // DEV: This symbolizes any kind of response (e.g. api client response, HTTP response)
+          cb(null, {hello: 'world'});
         },
-        options: {}
+        requestOptions: {}
       }, function (err, data) {
         that.data = data;
         done(err);
@@ -32,7 +34,7 @@ describe('A RequestRedisCache', function () {
     });
 
     it('retrieves our data', function () {
-
+      expect(this.data).to.deep.equal({hello: 'world'});
     });
 
     describe.skip('when fetched again', function () {
