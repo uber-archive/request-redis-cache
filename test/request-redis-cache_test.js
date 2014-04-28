@@ -1,6 +1,7 @@
 // Load in our dependencies
 var expect = require('chai').expect;
 var redisUtils = require('./utils/redis');
+var serverUtils = require('./utils/server');
 var RequestRedisCache = require('../');
 
 // Start tests
@@ -17,15 +18,15 @@ describe('A RequestRedisCache', function () {
   });
 
   describe('fetching fresh data', function () {
-    before(function () {
-      this.callCount = 0;
+    serverUtils.run(function (req, res) {
+      res.send({hello: 'world'});
     });
     before(function (done) {
       var that = this;
       this.callCount = 0;
       this.cache.get({
         cacheKey: 'fresh-data',
-        cacheTtl: 100,
+        cacheTtl: 1000,
         uncachedGet: function (options, cb) {
           // DEV: This symbolizes any kind of response (e.g. api client response, HTTP response)
           that.callCount += 1;
