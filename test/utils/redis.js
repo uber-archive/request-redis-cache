@@ -3,6 +3,7 @@ var spawn = require('child_process').spawn;
 var redis = require('redis');
 
 // Utility method for create a redis client
+// TODO: This should be broken up if posible
 exports.run = function () {
   // Start a server
   var server;
