@@ -22,9 +22,7 @@ var cacheUtils = {
       this.errors = [];
       var that = this;
       this.cache.on('error', function (error) {
-        console.log(error);
-        throw error;
-        // that.errors.push(error);
+        that.errors.push(error);
       });
     });
     after(function cleanupErrors () {
@@ -139,6 +137,9 @@ describe.only('A RequestRedisCache retrieving from a downed redis instance', fun
   });
 
   it('emits a descriptive error', function () {
+    expect(this.errors.length).to.be.at.least(1);
+    expect(this.errors[0]).to.have.property('cacheKey', 'redisless-data');
+    expect(this.errors[0].action).to.contain('Could not save fresh data to redis');
     console.log(this.errors);
   });
 
