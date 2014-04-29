@@ -44,6 +44,8 @@
     "request",
     "cache",
     "redis",
-    "expire"
+    "expire",
+    "fault-tolerant",
+    "pass-through"
   ]
 }
