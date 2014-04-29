@@ -94,6 +94,8 @@ Errors that are emitted will originally come from [`redis`][] or `params.parse`.
 - action `String`, human explanation of what went wrong
 - cacheKey `String`, key we were using with Redis
 - cacheTtl `Number`, TTL we were using with Redis
+- info `Mixed`, value we retrieved fia `uncachedGet`
+    - This can only be found when `params.stringify` cannot stringify the data
 - infoStr `String`, stringified form of data from `uncachedGet`/Redis
     - This can only be found when we are interacting with to be cached or already cached data
 
