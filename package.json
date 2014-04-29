@@ -43,6 +43,7 @@
   "keywords": [
     "request",
     "cache",
+    "memoize",
     "redis",
     "expire",
     "fault-tolerant",
