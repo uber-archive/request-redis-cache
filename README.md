@@ -1,10 +1,12 @@
 # request-redis-cache [![Build status](https://travis-ci.org/uber/request-redis-cache.png?branch=master)](https://travis-ci.org/uber/request-redis-cache)
 
-Make requests and cache them in [Redis][]
+Fault tolerant pass-through cache for generic requests backed by [Redis][]
 
-This was built along side [backbone-api-client][] to make caching responses from API clients easier. However, it is generic enough to use with any request mechanism.
+We attempt to serve data cached by Redis. If that data is not found, we fetch it from the server via an externally provided `function` and cache its response.
 
-It is built with a expire based cache that saves data for a TTL. Upon expiration, it will query the server when requested again.
+If Redis is down or misbehaving, errors are `emitted` but we continue to interact with the uncached `function` as if we were talking to the service directly.
+
+This was built along side [backbone-api-client][] to make transparently caching responses from API clients easier.
 
 [Redis]: http://redis.io/
 [backbone-api-client]: https://github.com/uber/backbone-api-client
