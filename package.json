@@ -38,7 +38,8 @@
     "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-watch": "~0.4.0",
     "redis": "~0.10.1",
-    "chai": "~1.9.1"
+    "chai": "~1.9.1",
+    "obj-extend": "~0.1.0"
   },
   "keywords": [
     "request",

@@ -1,16 +1,17 @@
 // Load in our dependencies
 var expect = require('chai').expect;
+var extend = require('obj-extend');
 var redisUtils = require('./utils/redis');
 var RequestRedisCache = require('../');
 
 // Define helpers for interacting with cache
 var cacheUtils = {
   // Method to create a new client
-  create: function () {
+  create: function (options) {
     before(function createCache () {
-      this.cache = new RequestRedisCache({
+      this.cache = new RequestRedisCache(extend({
         redis: this.redis
-      });
+      }, options));
     });
     after(function cleanupCache () {
       delete this.cache;
@@ -186,6 +187,41 @@ describe('A RequestRedisCache with malformed data', function () {
 
   it('invalidates the cached data', function () {
     expect(this.ttl).to.equal(1000);
+  });
+
+  it('grabs fresh data', function () {
+    expect(this.data).to.deep.equal({hello: 'world'});
+  });
+});
+
+describe('A RequestRedisCache saving malformed data', function () {
+  redisUtils.run();
+  cacheUtils.create({
+    stringify: function (data) {
+      data.some.nonexistent.property;
+      return JSON.stringify(data);
+    }
+  });
+  cacheUtils.collectErrors();
+  before(function makeRequest (done) {
+    var that = this;
+    this.cache.get({
+      cacheKey: 'cannot-save-data',
+      cacheTtl: 1000,
+      requestOptions: {},
+      uncachedGet: function (options, cb) {
+        cb(null, {hello: 'world'});
+      }
+    }, function (err, data) {
+      that.data = data;
+      done(err);
+    });
+  });
+
+  it('emits a descriptive error', function () {
+    expect(this.errors.length).to.be.at.least(1);
+    expect(this.errors[0]).to.have.property('cacheKey', 'cannot-save-data');
+    expect(this.errors[0].action).to.contain('Could not stringify');
   });
 
   it('grabs fresh data', function () {
